@@ -301,7 +301,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 		}
 		int i=1+offset;
 		int typeadded=0;
-		//int init=output.size();
+	
 		classmap.get(classpointer).add(ctx.getChild(i).getText());
 		if(!classStorage.containsKey(classpointer))classStorage.put(classpointer,currentclass);
 		int limit=ctx.getChildCount();
@@ -318,8 +318,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 			parent=false;
 			return null;
 		}
-		//output.add("static");
-		//int init=output.size();
+		
 		if(!isinner)output.add("public static");
 		else output.add("public");
 		int init=output.size();
@@ -362,7 +361,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 
 	@Override public Integer visitAbstractFunction(KotlinParser.AbstractFunctionContext ctx) { 
 		int i=1;
-		//int init=output.size();
+		
 		output.add("abstract public");
 		classmap.get(classpointer).add(ctx.getChild(2).getText());
 		if(!classStorage.containsKey(classpointer))classStorage.put(classpointer,currentclass);
@@ -402,13 +401,13 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 		return null; }
 
 	@Override public Integer visitFuncassign(KotlinParser.FuncassignContext ctx) { 
-	//System.out.println("hi");
+	
 	funcassign=1;
 	output.add("{\n");
 	output.add("return");
 	visit(ctx.getChild(1));
 	funcassign=1;
-	//System.out.println(functype);
+	
 	output.add(";");
 	output.add("}\n");
 	//funcassign=0;
@@ -422,14 +421,14 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 
 	public String getType(){
 		String type=null;
-	                //System.out.println(output.get(output.size()-1));
+	               
                 try{	
 			if(isNumeric(output.get(output.size()-1))&&currentfunc==null&& output.get(output.size()-1).contains("L")){
 				type="long";
 			}
 			else{
                         int temp=Integer.parseInt(output.get(output.size()-1));
-                        //double d=Double.parseDouble(output.get(output.size()-1));
+                        
                         type="int";
 			}
                 }catch(Exception e){
@@ -443,7 +442,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
                         }catch(Exception e1){
                                 if(currentfunc!=null)type=storage.get(currentfunc);
                                 else type="String";
-                                //currentfunc=null;
+                                
                         }
 			}
 
@@ -456,7 +455,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 	if(isinterface)output.add(typemap.get(ctx.getChild(3).getText()+"?"));
 	else output.add(typemap.get(ctx.getChild(3).getText()));
 	output.add(ctx.getChild(1).getText());
-	//output.add(";\n");
+	
 	if(isinterface)output.add("=null");
 	
 	return null; }
@@ -479,25 +478,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 	int size=output.size();
 	visit(ctx.getChild(i+1));
 	if(funcassign!=0){
-		/*
-		System.out.println("a");
-		try{
-			int temp=Integer.parseInt(output.get(output.size()-1));
-			//double d=Double.parseDouble(output.get(output.size()-1));
-			output.add(size-2,"int");
 
-		}catch(Exception e){
-			try{
-				double d=Double.parseDouble(output.get(output.size()-1));
-				output.add(size-2,"double");
-			}catch(Exception e1){
-				if(currentfunc!=null)output.add(size-2,storage.get(currentfunc));
-				else output.add(size-2,"String");
-				currentfunc=null;
-			}
-
-			
-		}*/
 		storage.put(ID,functype);
 		output.add(size-2,functype);
 		funcassign=0;
@@ -608,10 +589,10 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 			for(int i=size;i<output.size();i++)method+=output.get(i);
 
 			while(size!=output.size()){
-				//method+=output.get(output.size()-1);
+				
 				output.remove(output.size()-1);
 			}
-			//method=new StringBuilder(method).reverse().toString();
+			
 			output.add("it->"+method);
 		}else{
 			String toadd=ctx.getChild(1).getText();
@@ -637,18 +618,18 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 			int indices=0;
 			String toadd=ctx.getChild(4).getText();
 			if(toadd.contains(".")){
-				//System.out.println("yes");
+				
 				String temp="";
-				//System.out.print(temp.length);
+				
 				for(int i=0;toadd.charAt(i)!='.';i++)
 					temp+=toadd.charAt(i);
 				if(toadd.contains("indices")){
 					indices=1;
-					//temp+=".size()-1";
+					
 					toadd=temp;
 				}
 				else toadd=temp;
-		//		System.out.println(toadd);
+		
 			}
 			String type=storage.get(toadd);
 			if(type.contains("<")){
@@ -670,7 +651,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 			output.add(toadd);
 			}
 		}
-		//output.add(ctx.getChild(2).getText());
+		
 		output.add(")");
 		visit(ctx.getChild(6));
 		return null; }
@@ -911,20 +892,11 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 	@Override public Integer visitExpression(KotlinParser.ExpressionContext ctx) {
        		
 		if(funcassign==1){
-		//	System.out.println("check");
+		
 			funcassign=2;
 			spread(ctx);
 			funcassign=3;
-			/*
-			for(int i=0;i<ctx.getChildCount();i++){
-				if(storage.containsKey(ctx.getChild(i).getText()))visit(ctx.getChild(i));
-				if(isNumeric(ctx.getChild(i).getText())){
-					output.add(ctx.getChild(i).getText());
-					if(priority(functype)<priority(getType()))functype=getType();
-					output.remove(output.size()-1);
-				}
-			}
-			*/
+
 			
 
 		}
@@ -934,9 +906,9 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 			if(ctx.getChild(i).getChildCount()==0)output.add(ctx.getChild(i).getText());
 			else visit(ctx.getChild(i));
 		}	
-		//if(funcassign==3)funcassign=1;
+		
 		}
-		//funcassign=1;
+		
 		return null; }
 
 	@Override public Integer visitSuffix(KotlinParser.SuffixContext ctx) { return visitChildren(ctx); }
@@ -963,19 +935,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 	 }
 	@Override public Integer visitExprID(KotlinParser.ExprIDContext ctx) { 
 		String toadd=ctx.getChild(0).getText();
-		//System.out.println("here"+storage.get(toadd)+funcassign+functype);
-		/*
-		if(ctx.getChildCount()==3){
-			toadd+=ctx.getChild(1).getText()+ctx.getChild(2).getText();
-			if(storage.get(ctx.getChild(0).getText()).contains("<")){
-				if(!ctx.getChild(2).getText().contains("(")){
-					toadd+="()";
-				}
-			}
-			
 
-		}
-		output.add(toadd);*/
 		if(funcassign==1 || funcassign==2){
 			if(functype==null){
 				functype=storage.get(toadd);
@@ -1024,56 +984,11 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 			functype="Boolean";
 		}
 		for(int i=0;i<ctx.getChildCount();i++){
-			/*
-			if(ctx.getChild(i).getText().contains(".")){
-				String temp="";
-				String toadd=ctx.getChild(i).getText();
-				for(int j=0;toadd.charAt(j)!='.';j++)
-                                        temp+=toadd.charAt(j);
-				if(storage.containsKey(temp)&&storage.get(temp).contains("<")){
-					output.add(ctx.getChild(i).getText()+"()");
-					continue;
-				}
-			}
-			if(ctx.getChild(i).getText().contains("is")){
-				System.out.println("haha");
-				String[] temp=ctx.getChild(i).getText().split("is");
-				String ob=temp[0]+" instanceof "+temp[1];
-				if(temp[0].contains("!")){
-					ob=temp[0].replace("!","");
-					ob="!("+ob+" instanceof "+temp[1]+")";
-				}
-				output.add(ob);
-				continue;
-			}
-			if(ctx.getChild(i).getText().contains("in")&&ctx.getChild(i).getText().contains("..")){
-                                System.out.println(ctx.getChild(i).getText());
-                                String[] temp=ctx.getChild(i).getText().split("in");
-				System.out.println("yes");
-				if(rangestmt.equals("if")||rangestmt.equals("while")){
-					System.out.println(temp[1]);
-					String arg0="";
-					String arg1="";
-					int j=0;
-					for(j=0;temp[1].charAt(j)!='.';j++)arg0+=temp[1].charAt(j);
-					j+=2;
-					 for(;j<temp[1].length();j++)arg1+=temp[1].charAt(j);
-					System.out.println(arg0+"yes"+arg1);
 
-                                	String ob=temp[0]+">="+arg0+" && "+temp[0]+"<="+arg1;
-                                	if(temp[0].contains("!")){
-                                        	ob=ob.replaceAll("!","");
-                                        	ob="!("+ob+")";
-                                	}
-                                output.add(ob);
-				}
-                                continue;
-                        }*/
 			if(ctx.getChild(i).getChildCount()==0)output.add(ctx.getChild(i).getText());
                         else visit(ctx.getChild(i));
 
-			//output.add(ctx.getChild(i).getText());
-			//System.out.println(ctx.methodName());
+
 		}
 		return null; }
 
@@ -1095,7 +1010,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 				return null;
 			}
 			if(ctx.getChild(0).getText().equals("!")){
-				//System.out.println("aas");
+				
 				output.add(output.size()-1,"!(");
 				visit(ctx.getChild(1));
 				output.add(")");
@@ -1103,7 +1018,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 
 			}
 			if(ctx.getChild(0).getText().equals("in")){
-				//System.out.println("oo lala1");
+				
 
 				if((rangestmt!=null&&(rangestmt.equals("if")||rangestmt.equals("while")))&& ctx.getChild(1) instanceof KotlinParser.ExplicitRangeContext){
 					visit(ctx.getChild(1));
@@ -1135,20 +1050,16 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 
 	@Override public Integer visitCall(KotlinParser.CallContext ctx) { 
 		int restore=0;
-                /*if(output.get(output.size()-1).equals("}")){
-                        restore=1;
-                        output.remove(output.size()-1);
 
-                }*/
 		int skip=0;
                 int i=0;
 		if(funcassign==1){
 			funcassign=0;
 			restore=1;
 		}
-		//output.add(ctx.getChild(i).getText();i
+		
 		int end=1;
-		//String toadd="";
+		
 		if(callactive==1 && ctx.getChildCount()==1)visitChildren(ctx);
 
                 if(output.get(output.size()-1).contains("=") || funcassign==1)end=0;
@@ -1216,7 +1127,7 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 			 else if(ctx.getChild(0).getText().equals("Any")){
 				output.add("new Object(");
 			}else{
-				//output.add("(new output())."+ctx.getChild(0).getText()+"(");
+				
 				String clas="";
 
                                 for(int j=0;j<=classpointer;j++){
@@ -1232,47 +1143,26 @@ class KotlinConverter extends KotlinBaseVisitor<Integer>{
 			}
 
 		}
-		/*
-                for(i=0;i<ctx.getChildCount();i++){
-			if(ctx.getChild(i).getText().equals("print") || ctx.getChild(i).getText().equals("println")){
-                        	output.add("System.out."+ctx.getChild(i).getText());
-                        	continue;
-                	}else if(!ctx.getChild(i).getText().equals("(")) {
-				output.add("(new output())."+ctx.getChild(i).getText());
-				continue;
-			}
-			output.add(ctx.getChild(i).getText());
-			if(ctx.getChild(i).getText().equals("(")){
-				callactive=1;
-				visitChildren(ctx);
-				callactive=0;
-				break;
-			}
-                }*/
+
 		if(output.get(output.size()-1).equals(";\n"))output.remove(output.size()-1);
 		if(ctx.getChild(0).getText().equals("listOf")){
                         storage.put("listOf()","List<"+typemap.get(getType()+"?")+">");
-                        //currentfunc="listOf";
-			//System.out.println(storage.get("listOf"));
+
                 }
 		if(ctx.getChild(0).getText().equals("setOf")){
                         storage.put("setOf()","Set<"+typemap.get(getType()+"?")+">");
-                        //currentfunc="listOf";
-                        //System.out.println(storage.get("listOf"));
+
                 }
 
 		if(end==0)currentfunc=ctx.getChild(0).getText()+"()";
 		if(restore==1)funcassign=1;
-		//System.out.println(currentfunc);
+	
 		if(funcassign==1){
 			if(!ctx.getChild(1).getText().equals("."))functype=storage.get(currentfunc);
 			else functype=storage.get(ctx.getChild(0).getText());
 		}
 		output.add(")");
-                //if(end==1)output.add(";\n");
-                /*if(restore==1){
-                        output.add("}");
-                }*/
+
 
 		return null; 
 	}
